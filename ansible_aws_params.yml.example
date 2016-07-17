@@ -1,0 +1,29 @@
+---
+
+ansible_aws_instance_params:
+  account_id: 1234567
+  ami_name: ami-abcdefg      # The baseline AMI we use
+  instance_profile: someRoleUsedByThisInstance
+  key_name: aKeyThatYouNeed
+  placement_group: aPlacementGroup
+  security_group_id: sg-pqrstu
+  vpc_subnet_id: subnet-vwxyz
+  # How long to wait when bringing up a new server (for ssh to be available)
+  delay:
+    existing_instance: 0
+    new_instance: 60
+  # Barf after this
+  timeout: 360
+
+ansible_aws_servers:
+  # Catchall to cover all the servers
+  all:
+    name: all
+  # Any new servers that have been spun up
+  new:
+    name: new
+  # A specific category of server, called "worker"
+  worker:
+    name: worker
+    count: 1
+    instance_type: m4.large

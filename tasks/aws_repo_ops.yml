@@ -1,0 +1,16 @@
+---
+
+- debug: msg="op = {{ aws_repo_op }}, reg = {{ aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com, image = {{ aws_image }}, tag = {{ aws_tag }}"
+
+# Tag
+- name: Invoke aws_repo.py to do the {{ aws_repo_op }} for {{ aws_image }}:{{ aws_tag }}
+  vars:
+    aws_account_id: "{{ ansible_aws_instance_params.account_id }}"
+  script: "{{ playbook_dir }}/sys/aws/aws_repo_ops.py {{ aws_repo_op }}
+        {{ ansible_aws_region }}
+        {{ aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com
+        {{ aws_image}} {{ aws_tag }}"
+  register: aws_result
+  failed_when: "'FAILED' in aws_result.stdout or 'RepositoryNotFoundException' in aws_result.stderr"
+
+- debug: var=aws_result.stdout_lines

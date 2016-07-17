@@ -1,0 +1,38 @@
+---
+
+- name: Login to AWS ECR
+  include: aws_login_to_ecr.yml
+  when: ansible_aws_login_to_ecr is defined
+  tags:
+    - aws
+    - ecr
+    - aws_login_to_ecr
+
+# Bring up the instances we care about
+# You always want this to run
+- name: Launch any instances that we need
+  include: aws_launch_instances.yml
+  when: aws_launch is defined
+  tags:
+    - aws
+    - aws_launch
+
+# Find all the currently running instances
+- name: Get info about all the currently running instances
+  include: aws_get_instances.yml
+  when: aws_get_info is defined
+  vars:
+    aws_state: running
+  tags:
+    - aws
+    - aws_get
+
+# Push repos to ECR
+- name: Push repos to ECR
+  include: aws_push_to_ecr.yml
+  when: aws_push_to_ecr is defined
+  vars:
+    aws_state: running
+  tags:
+    - aws
+    - aws_push_to_ecr

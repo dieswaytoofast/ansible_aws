@@ -1,0 +1,10 @@
+---
+
+# Pull the containers
+- name: "{{ aws_repo_op }} on {{ aws_image }}:{{ aws_tag }}"
+  include: roles/aws/tasks/aws_repo_ops.yml
+  vars:
+    aws_repo_op: pull
+    aws_image: "{{ aws_image_name }}"
+    aws_tag: "{{ aws_image_tag }}"
+

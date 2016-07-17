@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: Mahesh Paolini-Subramanya (@dieswaytoofast)
+  description: Ansible utilities to interacts with AWS
+  license: BSD
+  min_ansible_version: 2.
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+  galaxy_tags:
+  - cloud
+  - aws
+  - ec2
+  - ecr
+  - packaging
+  - system
+  - utilities
+dependencies: []
