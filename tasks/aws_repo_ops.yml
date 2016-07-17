@@ -1,6 +1,6 @@
 ---
 
-- debug: msg="op = {{ aws_repo_op }}, reg = {{ aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com, image = {{ aws_image }}, tag = {{ aws_tag }}"
+- debug: msg="op = {{ aws_repo_op }}, reg = {{ ansible_aws_instance_params.aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com, image = {{ aws_image }}, tag = {{ aws_tag }}"
 
 # Tag
 - name: Invoke aws_repo.py to do the {{ aws_repo_op }} for {{ aws_image }}:{{ aws_tag }}
