@@ -42,7 +42,7 @@
 - name: Add new instance to group {{ ansible_aws_servers.new.name }}
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: "{{ server_type.new.name }}"
+    groupname: "{{ ansible_aws_servers.new.name }}"
   with_items: "{{ li_result.instances }}"
 
 - debug: var=li_result.instance_ids
