@@ -16,10 +16,10 @@
 
 - debug: var=gi_result.instances
 
-- name: Add these instances to group {{ server_type.all.name }}
+- name: Add these instances to group {{ ansible_aws_servers.all.name }}
   add_host:
     hostname: "{{ item.private_ip_address }}"
-    groupname: "{{ server_type.all.name }}"
+    groupname: "{{ ansible_aws_servers.all.name }}"
   with_items: "{{ gi_result.instances }}"
 
 - debug: var=gi_result.instances
