@@ -4,7 +4,7 @@
 - name: Invoke aws_repo.py to do the {{ aws_repo_op }} for {{ aws_image }}:{{ aws_tag }}
   vars:
     aws_account_id: "{{ ansible_aws_instance_params.account_id }}"
-  script: "../files/aws_repo_ops.py {{ aws_repo_op }}
+  script: "roles/ansible_aws/files/aws_repo_ops.py {{ aws_repo_op }}
         {{ ansible_aws_region }}
         {{ aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com
         {{ aws_image}} {{ aws_tag }}"
