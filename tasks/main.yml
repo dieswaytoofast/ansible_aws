@@ -2,7 +2,7 @@
 
 - name: Login to AWS ECR
   include: aws_login_to_ecr.yml
-  when: ansible_aws_login_to_ecr is defined
+  when: aws_login_to_ecr is defined
   tags:
     - aws
     - ecr
