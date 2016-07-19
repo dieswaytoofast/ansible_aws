@@ -1,7 +1,8 @@
 ---
 
+# Returns 'ansible_aws_params_file' which is where future playbooks can load params
 - name: Get AWS params from S3 (if necessary)
-  include: ansible_aws_get_params_from_s3.yml
+  include: ansible_aws_get_config_from_s3.yml
   when: ansible_aws_get_config_from_s3 is defined
   tags:
     - ansible_aws

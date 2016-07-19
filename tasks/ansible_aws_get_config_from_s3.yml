@@ -5,8 +5,21 @@
   command: "{{ ansible_aws_paths.aws }} s3 cp {{ ansible_aws_s3_url }} {{ ansible_aws_config_file }}"
   register: result
 
+- name: Check if the file exists
+  stat:
+    path: "{{ ansible_aws_config_file }}"
+  register: ansible_aws_config_file_info
 
 # If the file wasn't downloaded, this will fail. Good :-)
 - name: Load the params from {{ ansible_aws_config_file }}
-  include_vars: {{ ansible_aws_config_file }}
+  include_vars: "{{ ansible_aws_config_file }}"
+  when: ansible_aws_config_file_info.stat.exists
+
+# Because the loaded vars don't survive across playbooks, we fact-ize them
+- name: Make the param file var avaiable for future generations
+  set_fact:
+    ansible_aws_config_file: "{{ ansible_aws_config_file }}"
+
+- debug: msg="{{ ansible_aws_config_file }} doesn't exist"
+  when: not ansible_aws_config_file_info.stat.exists
 
