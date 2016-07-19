@@ -1,0 +1,10 @@
+---
+
+# Push the containers
+- name: "{{ ansible_aws_repo_op }} on {{ ansible_aws_image }}:{{ ansible_aws_tag }}"
+  include: roles/ansible_aws/tasks/ansible_aws_repo_ops.yml  # Fully qualified, 'cos it might be invoked from elsewhere
+  vars:
+    ansible_aws_repo_op: push
+    ansible_aws_image: "{{ ansible_aws_image_name }}"
+    ansible_aws_tag: "{{ ansible_aws_image_tag }}"
+

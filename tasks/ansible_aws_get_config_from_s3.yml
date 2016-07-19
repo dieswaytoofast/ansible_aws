@@ -1,0 +1,12 @@
+---
+
+# Get the docker login command (assumes that aws is setup)
+- name: Copy config file {{ ansible_aws_config_file }} from {{ ansible_aws_s3_url }}
+  command: "{{ ansible_aws_paths.aws }} s3 cp {{ ansible_aws_s3_url }} {{ ansible_aws_config_file }}"
+  register: result
+
+
+# If the file wasn't downloaded, this will fail. Good :-)
+- name: Load the params from {{ ansible_aws_config_file }}
+  include_vars: {{ ansible_aws_config_file }}
+

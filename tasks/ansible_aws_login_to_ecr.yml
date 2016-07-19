@@ -12,6 +12,6 @@
 - name: Login to AWS ECR
   command: "{{ result.stdout }}"
   when: "'docker login -u AWS' in result.stdout"
-  register: aws_result
+  register: ansible_aws_result
 
-- debug: var=aws_result
+- debug: var=ansible_aws_result

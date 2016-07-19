@@ -1,20 +1,20 @@
 ---
 
 # Now launch any remaining instances we care about
-- name: Launch EC2 Intance(s) for {{ aws_server_type}}        # Set this
+- name: Launch EC2 Intance(s) for {{ ansible_aws_server_type}}        # Set this
   ec2:
     region: "{{ ansible_aws_region }}"
     assign_public_ip: yes
     count_tag:
-      "ansible_aws_server_type": "{{ aws_server_type }}"         # Set this
-    exact_count: "{{ aws_instance_count }}"              # Set this
+      "ansible_aws_server_type": "{{ ansible_aws_server_type }}"         # Set this
+    exact_count: "{{ ansible_aws_instance_count }}"              # Set this
     group_id: "{{ ansible_aws_instance_params.security_group_id }}"
     image: "{{ ansible_aws_instance_params.ami_name }}"
     instance_profile_name: "{{ ansible_aws_instance_params.instance_profile }}"
     instance_tags:
       "weave_group": "{{ weave.group_name }}"
-      "ansible_aws_server_type": "{{ aws_server_type }}"
-    instance_type: "{{ aws_instance_type }}"            # Set this
+      "ansible_aws_server_type": "{{ ansible_aws_server_type }}"
+    instance_type: "{{ ansible_aws_instance_type }}"            # Set this
     key_name: "{{ ansible_aws_instance_params.key_name }}"
     placement_group: "{{ ansible_aws_instance_params.placement_group }}"
     vpc_subnet_id: "{{ ansible_aws_instance_params.vpc_subnet_id }}"
@@ -23,10 +23,10 @@
 
 - debug: var=li_result
 
-- name: Add new instance to group {{ aws_server_type }}
+- name: Add new instance to group {{ ansible_aws_server_type }}
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: "{{ aws_server_type }}"
+    groupname: "{{ ansible_aws_server_type }}"
   with_items: "{{ li_result.instances }}"
 
 - debug: var=li_result.instance_ids

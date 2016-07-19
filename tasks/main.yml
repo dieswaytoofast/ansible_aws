@@ -1,38 +1,45 @@
 ---
 
-- name: Login to AWS ECR
-  include: aws_login_to_ecr.yml
-  when: aws_login_to_ecr is defined
+- name: Get AWS params from S3 (if necessary)
+  include: ansible_aws_get_params_from_s3.yml
+  when: ansible_aws_get_config_from_s3 is defined
   tags:
-    - aws
-    - ecr
-    - aws_login_to_ecr
+    - ansible_aws
+    - ansible_aws_get_config_from_s3
+
+- name: Login to AWS ECR
+  include: ansible_aws_login_to_ecr.yml
+  when: ansible_aws_login_to_ecr is defined
+  tags:
+    - ansible_aws
+    - ansible_aws_ecr
+    - ansible_aws_login_to_ecr
 
 # Bring up the instances we care about
 # You always want this to run
 - name: Launch any instances that we need
-  include: aws_launch_instances.yml
-  when: aws_launch is defined
+  include: ansible_aws_launch_instances.yml
+  when: ansible_aws_launch is defined
   tags:
-    - aws
-    - aws_launch
+    - ansible_aws
+    - ansible_aws_launch
 
 # Find all the currently running instances
 - name: Get info about all the currently running instances
-  include: aws_get_instances.yml
-  when: aws_get_info is defined
+  include: ansible_aws_get_instances.yml
+  when: ansible_aws_get_info is defined
   vars:
-    aws_state: running
+    ansible_aws_state: running
   tags:
-    - aws
-    - aws_get
+    - ansible_aws
+    - ansible_aws_get
 
 # Push repos to ECR
 - name: Push repos to ECR
-  include: aws_push_to_ecr.yml
-  when: aws_push_to_ecr is defined
+  include: ansible_aws_push_to_ecr.yml
+  when: ansible_aws_push_to_ecr is defined
   vars:
-    aws_state: running
+    ansible_aws_state: running
   tags:
-    - aws
-    - aws_push_to_ecr
+    - ansible_aws
+    - ansible_aws_push_to_ecr

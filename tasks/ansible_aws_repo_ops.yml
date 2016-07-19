@@ -1,0 +1,14 @@
+---
+
+# Tag
+- name: Invoke ansible_aws_repo.py to do the {{ ansible_aws_repo_op }} for {{ ansible_aws_image }}:{{ ansible_aws_tag }}
+  vars:
+    ansible_aws_account_id: "{{ ansible_aws_instance_params.account_id }}"
+  script: "roles/ansible_aws/files/ansible_aws_repo_ops.py {{ ansible_aws_repo_op }}
+        {{ ansible_aws_region }}
+        {{ ansible_aws_account_id }}.dkr.ecr.{{ ansible_aws_region }}.amazonaws.com
+        {{ ansible_aws_image}} {{ ansible_aws_tag }}"
+  register: ansible_aws_result
+  failed_when: "'FAILED' in ansible_aws_result.stdout or 'RepositoryNotFoundException' in ansible_aws_result.stderr"
+
+- debug: var=ansible_aws_result.stdout_lines
