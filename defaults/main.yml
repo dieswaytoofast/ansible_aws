@@ -1,13 +1,12 @@
 ---
 
+# These can be passed on the command line, or be part of a config file. Up to you
+
 # Default region for instances
 ansible_aws_region: us-east-1
 
 # Whether to download configuration params from S3
-ansible_aws_s3_config: false
-
-# Are the configuration params stored using Server Side Encryption
-ansible_aws_s3_use_sse: true
+ansible_aws_get_config_from_s3: false
 
 # The S3 url in which the config YAML file is stored
 #ansible_aws_s3_url: s3://some_url_here    #e.g. s3://bucketname_foo/a/complicated/key/here

@@ -1,6 +1,11 @@
 ---
 
-# Get the docker login command (assumes that aws is setup)
+- name: Make sure there is no existing file called {{ ansible_aws_config_file }}
+  file:
+    path: "{{ ansible_aws_config_file }}"
+    state: absent
+
+
 - name: Copy config file {{ ansible_aws_config_file }} from {{ ansible_aws_s3_url }}
   command: "{{ ansible_aws_paths.aws }} s3 cp {{ ansible_aws_s3_url }} {{ ansible_aws_config_file }}"
   register: result
@@ -15,11 +20,8 @@
   include_vars: "{{ ansible_aws_config_file }}"
   when: ansible_aws_config_file_info.stat.exists
 
-# Because the loaded vars don't survive across playbooks, we fact-ize them
-- name: Make the param file var avaiable for future generations
-  set_fact:
-    ansible_aws_config_file: "{{ ansible_aws_config_file }}"
-
 - debug: msg="{{ ansible_aws_config_file }} doesn't exist"
   when: not ansible_aws_config_file_info.stat.exists
+
+
 
