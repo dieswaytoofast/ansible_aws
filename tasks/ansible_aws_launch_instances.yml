@@ -31,18 +31,18 @@
 
 - debug: var=li_result.instance_ids
 
-- name: Add new instance to group {{ ansible_aws_servers.all.name }}
+- name: Add new instance to group all
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: "{{ ansible_aws_servers.all.name }}"
+    groupname: all
   with_items: "{{ li_result.instances }}"
 
 - debug: var=li_result.instance_ids
 
-- name: Add new instance to group {{ ansible_aws_servers.new.name }}
+- name: Add new instance to group new
   add_host:
     hostname: "{{ item.private_ip }}"
-    groupname: "{{ ansible_aws_servers.new.name }}"
+    groupname: new
   with_items: "{{ li_result.instances }}"
 
 - debug: var=li_result.instance_ids
