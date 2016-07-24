@@ -1,5 +1,5 @@
 ---
-
+# Example file that gets loaded in to this module as 'ansible_aws_config_file'
 ansible_aws_instance_params:
   account_id: 1234567
   ami_name: ami-abcdefg      # The baseline AMI we use

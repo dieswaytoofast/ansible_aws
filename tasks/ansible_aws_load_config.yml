@@ -1,0 +1,4 @@
+---
+
+- name: Load the params from {{ ansible_aws_config_file }}
+  include_vars: "{{ ansible_aws_config_file }}"

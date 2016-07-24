@@ -1,12 +1,12 @@
 ---
 
 # Returns 'ansible_aws_params_file' which is where future playbooks can load params
-- name: Get AWS params from S3 (if necessary)
-  include: ansible_aws_get_config_from_s3.yml
-  when: ansible_aws_get_config_from_s3 is defined
+- name: Load AWS config params
+  include: ansible_aws_load_config.yml
+  when: ansible_aws_load_config is defined
   tags:
     - ansible_aws
-    - ansible_aws_get_config_from_s3
+    - ansible_aws_load_config
 
 - name: Login to AWS ECR
   include: ansible_aws_login_to_ecr.yml

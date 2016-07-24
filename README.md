@@ -25,10 +25,9 @@ You'll need to edit *ansible_aws_params.yml* to put in params relevant to you
 (An example is provided)
 
     - hosts: foo
-      vars_files: 
-        - ansible_aws_params.yml
       roles:
          - role: dieswaytoofast.ansible_aws
+           ansible_aws_config_file: ansible_aws_params.yml
 
 License
 -------
