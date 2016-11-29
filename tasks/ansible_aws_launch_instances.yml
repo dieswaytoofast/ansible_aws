@@ -27,7 +27,7 @@
   add_host:
     hostname: "{{ item.private_ip }}"
     groupname: "{{ ansible_aws_server_type }}"
-  with_items: "{{ li_result.instances }}"
+  with_items: "{{ li_result.instances | default([]) }}"
 
 - debug: var=li_result.instance_ids
 
@@ -35,7 +35,7 @@
   add_host:
     hostname: "{{ item.private_ip }}"
     groupname: all
-  with_items: "{{ li_result.instances }}"
+  with_items: "{{ li_result.instances | default([]) }}"
 
 - debug: var=li_result.instance_ids
 
@@ -43,7 +43,7 @@
   add_host:
     hostname: "{{ item.private_ip }}"
     groupname: new
-  with_items: "{{ li_result.instances }}"
+  with_items: "{{ li_result.instances | default([]) }}"
 
 - debug: var=li_result.instance_ids
 
@@ -54,6 +54,6 @@
     delay: "{{ ansible_aws_instance_params.delay.new_instance }}"
     timeout: "{{ ansible_aws_instance_params.timeout }}"
     state: started
-  with_items: "{{ li_result.instances }}"
+  with_items: "{{ li_result.instances | default([]) }}"
   register: result
 
