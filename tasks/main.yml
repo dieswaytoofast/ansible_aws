@@ -3,44 +3,28 @@
 # Returns 'ansible_aws_params_file' which is where future playbooks can load params
 - name: Load AWS config params
   include: ansible_aws_load_config.yml
-  when: ansible_aws_load_config is defined
-  tags:
-    - ansible_aws
-    - ansible_aws_load_config
+  when: ansible_aws_load_config
 
 - name: Login to AWS ECR
   include: ansible_aws_login_to_ecr.yml
-  when: ansible_aws_login_to_ecr is defined
-  tags:
-    - ansible_aws
-    - ansible_aws_ecr
-    - ansible_aws_login_to_ecr
+  when: ansible_aws_login_to_ecr
 
 # Bring up the instances we care about
 # You always want this to run
 - name: Launch any instances that we need
   include: ansible_aws_launch_instances.yml
-  when: ansible_aws_launch is defined
-  tags:
-    - ansible_aws
-    - ansible_aws_launch
+  when: ansible_aws_launch
 
 # Find all the currently running instances
 - name: Get info about all the currently running instances
   include: ansible_aws_get_instances.yml
-  when: ansible_aws_get_info is defined
+  when: ansible_aws_get_info
   vars:
     ansible_aws_state: running
-  tags:
-    - ansible_aws
-    - ansible_aws_get
 
 # Push repos to ECR
 - name: Push repos to ECR
   include: ansible_aws_push_to_ecr.yml
-  when: ansible_aws_push_to_ecr is defined
+  when: ansible_aws_push_to_ecr
   vars:
     ansible_aws_state: running
-  tags:
-    - ansible_aws
-    - ansible_aws_push_to_ecr
