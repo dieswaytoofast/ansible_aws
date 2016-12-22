@@ -12,7 +12,7 @@
 # Bring up the instances we care about
 - name: Launch any instances that we need
   include: ansible_aws_launch_instances.yml
-  when: ansible_aws_launch_with_subtypes
+  when: ansible_aws_launch
   with_items: "{{ ansible_aws_server_subtypes | default(['default']) }}"
   loop_control:
     loop_var: ansible_aws_server_subtype
