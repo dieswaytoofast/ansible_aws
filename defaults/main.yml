@@ -5,9 +5,6 @@
 # Default region for instances
 ansible_aws_region: us-east-1
 
-# Default server subtype
-ansible_aws_server_subtype: default
-
 # Default paths
 ansible_aws_paths:
   aws: /usr/local/bin/aws
