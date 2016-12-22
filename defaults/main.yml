@@ -14,6 +14,7 @@ ansible_aws_paths:
 
 ansible_aws_get_info: false
 ansible_aws_launch: false
+ansible_aws_launch_with_subtypes: false
 ansible_aws_load_config: false
 ansible_aws_login_to_ecr: false
 ansible_aws_push_to_ecr: false
