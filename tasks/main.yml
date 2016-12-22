@@ -10,10 +10,17 @@
   when: ansible_aws_login_to_ecr
 
 # Bring up the instances we care about
-# You always want this to run
 - name: Launch any instances that we need
   include: ansible_aws_launch_instances.yml
   when: ansible_aws_launch
+
+# Bring up the instances we care about, when a list of subtypes is provided
+- name: Launch any instances that we need
+  include: ansible_aws_launch_instances.yml
+  when: ansible_aws_launch
+  with_items: "{{ ansible_aws_server_subtypes | default([]) }}"
+  loop_control:
+    loop_var: ansible_aws_server_subtype
 
 # Find all the currently running instances
 - name: Get info about all the currently running instances
