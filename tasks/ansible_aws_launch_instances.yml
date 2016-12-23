@@ -1,5 +1,15 @@
 ---
 
+- name: Set the name of the instance to be launced
+  set_fact:
+    temp_server_name: "{{ ansible_aws_server_type }}-{{ ansible_aws_server_subtype }}"
+  when: ansible_aws_server_name is not defined
+
+- name: Set the name of the instance to be launced
+  set_fact:
+    temp_server_name: "{{ ansible_aws_server_name }}"
+  when: ansible_aws_server_name is defined
+
 # Now launch any remaining instances we care about
 - name: Launch EC2 Intance(s) for {{ ansible_aws_server_type}}        # Set this
   ec2:
@@ -13,6 +23,7 @@
     image: "{{ ansible_aws_instance_params.ami_name }}"
     instance_profile_name: "{{ ansible_aws_instance_params.instance_profile }}"
     instance_tags:
+      "Name": "{{ temp_server_name }}"
       "weave_group": "{{ weave.group_name }}"
       "ansible_aws_server_type": "{{ ansible_aws_server_type }}"
       "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype }}"
