@@ -9,6 +9,7 @@ ansible_aws_region: us-east-1
 ansible_aws_paths:
   aws: /usr/local/bin/aws
 
+ansible_aws_assing_public_ip: false
 ansible_aws_get_info: false
 ansible_aws_launch: false
 ansible_aws_launch_with_subtypes: false

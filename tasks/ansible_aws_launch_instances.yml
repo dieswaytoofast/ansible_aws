@@ -14,7 +14,7 @@
 - name: Launch EC2 Intance(s) for {{ ansible_aws_server_type}}        # Set this
   ec2:
     region: "{{ ansible_aws_region }}"
-    assign_public_ip: yes
+    assign_public_ip: "{{ ansible_aws_assign_public_ip }}"
     count_tag:
       "ansible_aws_server_type": "{{ ansible_aws_server_type }}"         # Set this
       "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype }}"
