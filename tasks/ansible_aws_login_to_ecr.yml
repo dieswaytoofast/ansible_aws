@@ -7,11 +7,9 @@
   command: "{{ ansible_aws_paths.aws }} ecr get-login --region {{ ansible_aws_region }}"
   register: result
 
-- debug: var=result.stdout
 
 - name: Login to AWS ECR
   command: "{{ result.stdout }}"
   when: "'docker login -u AWS' in result.stdout"
   register: ansible_aws_result
 
-- debug: var=ansible_aws_result

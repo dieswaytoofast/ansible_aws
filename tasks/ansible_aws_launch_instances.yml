@@ -34,7 +34,6 @@
     wait: yes
   register: li_result
 
-- debug: var=li_result
 
 - name: Add new instance to group {{ ansible_aws_server_type }}
   add_host:
@@ -42,7 +41,6 @@
     groupname: "{{ ansible_aws_server_type }}"
   with_items: "{{ li_result.instances | default([]) }}"
 
-- debug: var=li_result.instance_ids
 
 - name: Add new instance to group all
   add_host:
@@ -50,7 +48,6 @@
     groupname: all
   with_items: "{{ li_result.instances | default([]) }}"
 
-- debug: var=li_result.instance_ids
 
 - name: Add new instance to group new
   add_host:
@@ -58,7 +55,6 @@
     groupname: new
   with_items: "{{ li_result.instances | default([]) }}"
 
-- debug: var=li_result.instance_ids
 
 - name: Wait for SSH to come up
   wait_for:

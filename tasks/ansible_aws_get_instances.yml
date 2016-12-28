@@ -17,7 +17,6 @@
     groupname: "{{ ansible_aws_server_type }}"
   with_items: "{{ gi_result.instances | default([]) }}"
 
-- debug: var=gi_result.instances
 
 - name: Add these instances to group all
   add_host:
@@ -25,7 +24,6 @@
     groupname: all
   with_items: "{{ gi_result.instances | default([]) }}"
 
-- debug: var=gi_result.instances
 
 - name: Make sure that ssh is up for these servers
   wait_for:
@@ -37,5 +35,4 @@
   with_items: "{{ gi_result.instances | default([]) }}"
   register: result
 
-- debug: var=result
 

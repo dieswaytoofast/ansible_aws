@@ -11,4 +11,3 @@
   register: ansible_aws_result
   failed_when: "'FAILED' in ansible_aws_result.stdout or 'RepositoryNotFoundException' in ansible_aws_result.stderr"
 
-- debug: var=ansible_aws_result.stdout_lines
