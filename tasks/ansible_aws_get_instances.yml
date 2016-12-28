@@ -8,6 +8,9 @@
     region: "{{ ansible_aws_region }}"
   register: gi_result
 
+- name: Set variables that we might use elsewhere
+  include: roles/{{ role_path|basename }}/tasks/ansible_aws_set_vars.yml
+
 - name: Add these instances to group {{ ansible_aws_server_type }}
   add_host:
     hostname: "{{ item.private_ip_address }}"
