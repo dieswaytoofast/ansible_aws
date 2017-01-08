@@ -4,6 +4,9 @@
 - name: Load AWS config params
   include: ansible_aws_load_config.yml
   when: ansible_aws_load_config
+  with_items: "{{ ansible_aws_config_files | default([]) }}"
+  loop_control:
+    loop_var: ansible_aws_config_file
 
 - name: Login to AWS ECR
   include: ansible_aws_login_to_ecr.yml
@@ -23,6 +26,9 @@
   when: ansible_aws_get_info
   vars:
     ansible_aws_state: running
+  with_items: "{{ ansible_aws_server_types | default([]) }}"
+  loop_control:
+    loop_var: ansible_aws_server_type
 
 # Push repos to ECR
 - name: Push repos to ECR
