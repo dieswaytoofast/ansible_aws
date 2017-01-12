@@ -1,5 +1,6 @@
 ---
 
+## Note - these facts are only available for one type at a time
 - set_fact:
     ansible_aws_subtype_to_private_ip_dict: "{{ ansible_aws_subtype_to_private_ip_dict | default({}) | combine( { item.0 : item.1 } ) }}"
   with_together:
@@ -11,3 +12,42 @@
   with_together:
     - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_subtype')|list }}"
     - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='private_ip_address')|list }}"
+
+- set_fact:
+    ansible_aws_type_to_public_ip_dict: "{{ ansible_aws_subtype_to_public_ip_dict | default({}) | combine( { item.0 : item.1 } ) }}"
+  with_together:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_subtype')|list }}"
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='public_ip_address')|list }}"
+
+- set_fact:
+    ansible_aws_public_ip_to_subtype_dict: "{{ ansible_aws_public_ip_to_subtype_dict | default({}) | combine( { item.1 : item.0 } ) }}"
+  with_together:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_subtype')|list }}"
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='public_ip_address')|list }}"
+
+
+# Initializes the dict with the correct keys
+- set_fact:
+    ansible_aws_type_to_private_ip_list_dict: "{{ ansible_aws_type_to_private_ip_list_dict | default({}) | combine( { item : [] } ) }}"
+  with_items:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_type')|list }}"
+
+# Populates the dict with the correct list
+- set_fact:
+    ansible_aws_type_to_private_ip_list_dict: "{{ ansible_aws_type_to_private_ip_list_dict | default({}) | combine( { item.0 : ansible_aws_type_to_private_ip_list_dict[item.0]|default([])|list + [item.1] } ) }}"
+  with_together:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_type')|list }}"
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='private_ip_address')|list }}"
+
+# Initializes the dict with the correct keys
+- set_fact:
+    ansible_aws_type_to_public_ip_list_dict: "{{ ansible_aws_type_to_public_ip_list_dict | default({}) | combine( { item : [] } ) }}"
+  with_items:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_type')|list }}"
+
+# Populates the dict with the correct list
+- set_fact:
+    ansible_aws_type_to_public_ip_list_dict: "{{ ansible_aws_type_to_public_ip_list_dict | default({}) | combine( { item.0 : ansible_aws_type_to_public_ip_list_dict[item.0]|default([])|list + [item.1] } ) }}"
+  with_together:
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='tags.ansible_aws_server_type')|list }}"
+    - "{{ gi_result.instances|selectattr('state', 'equalto', 'running')|map(attribute='public_ip_address')|list }}"
