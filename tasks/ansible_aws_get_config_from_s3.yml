@@ -20,7 +20,7 @@
   include_vars: "{{ ansible_aws_config_file }}"
   when: ansible_aws_config_file_info.stat.exists
 
-- debug: msg="{{ ansible_aws_config_file }} doesn't exist"
+- fail: msg="{{ ansible_aws_config_file }} doesn't exist"
   when: not ansible_aws_config_file_info.stat.exists
 
 
