@@ -2,7 +2,7 @@
 
 - name: Set the name of the instance to be launced
   set_fact:
-    temp_server_name: "{{ ansible_aws_server_type }}-{{ ansible_aws_server_subtype }}"
+    temp_server_name: "{{ ansible_aws_server_type }}-{{ ansible_aws_server_subtype_value }}"
   when: ansible_aws_server_name is not defined
 
 - name: Set the name of the instance to be launced
@@ -17,7 +17,7 @@
     assign_public_ip: "{{ ansible_aws_assign_public_ip }}"
     count_tag:
       "ansible_aws_server_type": "{{ ansible_aws_server_type }}"         # Set this
-      "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype }}"
+      "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype_value }}"
     exact_count: "{{ ansible_aws_instance_count }}"              # Set this
     group_id: "{{ ansible_aws_instance_params.security_group_id }}"
     image: "{{ ansible_aws_instance_params.ami_name }}"
@@ -26,7 +26,7 @@
       "Name": "{{ temp_server_name }}"
       "weave_group": "{{ weave.group_name }}"
       "ansible_aws_server_type": "{{ ansible_aws_server_type }}"
-      "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype }}"
+      "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype_value }}"
     instance_type: "{{ ansible_aws_instance_type }}"            # Set this
     key_name: "{{ ansible_aws_instance_params.key_name }}"
     placement_group: "{{ ansible_aws_instance_params.placement_group }}"
