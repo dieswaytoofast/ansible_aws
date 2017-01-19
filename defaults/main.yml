@@ -22,4 +22,6 @@ ansible_aws_push_to_ecr: false
 ansible_aws_instance_state_launched: launched
 ansible_aws_instance_state_configured: configured
 
+ansible_aws_weave_state_launched: launched
+ansible_aws_weave_state_configured: configured
 
