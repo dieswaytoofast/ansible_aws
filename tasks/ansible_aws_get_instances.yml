@@ -46,7 +46,7 @@
 
 - name: Add these instance to group new
   add_host:
-    hostname: "{{ item.private_ip }}"
+    hostname: "{{ item.private_ip_address }}"
     groupname: new
   with_items: "{{ is_result.instances | default([]) }}"
 

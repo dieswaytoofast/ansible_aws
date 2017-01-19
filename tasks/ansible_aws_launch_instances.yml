@@ -27,7 +27,7 @@
       "weave_group": "{{ weave.group_name }}"
       "ansible_aws_server_type": "{{ ansible_aws_server_type }}"
       "ansible_aws_server_subtype": "{{ ansible_aws_server_subtype_value }}"
-      "ansible_aws_server_subtype": "{{ ansible_aws_instance_state_launched }}"
+      "ansible_aws_instance_state": "{{ ansible_aws_instance_state_launched }}"
     instance_type: "{{ ansible_aws_instance_type }}"            # Set this
     key_name: "{{ ansible_aws_instance_params.key_name }}"
     placement_group: "{{ ansible_aws_instance_params.placement_group }}"

@@ -18,3 +18,8 @@ ansible_aws_load_config: false
 ansible_aws_login_to_ecr: false
 ansible_aws_push_to_ecr: false
 
+# States
+ansible_aws_instance_state_launched: launched
+ansible_aws_instance_state_configured: configured
+
+
