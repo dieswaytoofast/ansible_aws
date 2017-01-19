@@ -35,4 +35,19 @@
   with_items: "{{ gi_result.instances | default([]) }}"
   register: result
 
+- name: Get all the servers with tag {{ ansible_aws_instance_state }} that are still in {{ ansible_aws_instance_state_launched }}
+  ec2_remote_facts:
+    filters:
+      "instance-state-name": running
+      "tag:ansible_aws_server_type": "{{ ansible_aws_server_type }}"
+      "tag:ansible_aws_instance_state": "{{ ansible_aws_instance_state_launched }}"
+    region: "{{ ansible_aws_region }}"
+  register: is_result
+
+- name: Add these instance to group new
+  add_host:
+    hostname: "{{ item.private_ip }}"
+    groupname: new
+  with_items: "{{ is_result.instances | default([]) }}"
+
 
