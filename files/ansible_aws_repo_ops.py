@@ -2,6 +2,8 @@
 #  encoding: utf-8
 """
 Check ECR to see if a given version of the image exists in the repo
+Notes:
+    all_tags: json string in the form '{"all_tags" : ["a", "b", "c"]}'
 """
 import json
 import sys
@@ -12,17 +14,14 @@ AWS = '/usr/local/bin/aws'
 DOCKER = '/usr/bin/docker'
 
 
-def get_image_ids_from_ecr(region: str=None, repo: str=None, tag: str=None):
+def get_image_ids_from_ecr(region: str=None, repo: str=None):
     """
     Get all the image ids from the ECR repo
     :param region:
     :param repo:
-    :param tag:
     :return:
     """
     if region is None:
-        return False
-    if tag is None:
         return False
 
     if repo is None:
@@ -38,7 +37,7 @@ def get_image_ids_from_ecr(region: str=None, repo: str=None, tag: str=None):
         return([])
 
 
-def check_for_tag(image_ids, tag):
+def check_for_tag(image_ids: list=[], tag: str=None):
     """
     Check to see if the given tag is in the image_ids
     :param image_ids:
@@ -52,7 +51,57 @@ def check_for_tag(image_ids, tag):
     return False
 
 
-def push_if_not_exist(region, registry_prefix, repo, tag):
+def get_tags_from_image_ids(image_ids: list=[]):
+    """
+    Get the tags for the given image_ids
+    Note that nulls and 'latest' is ignored
+    :param image_ids:
+    :return:
+    """
+    tags = []
+
+    for image in image_ids:
+        if ('imageTag') in image:
+            tag = image['imageTag']
+            if (tag is None) or (tag == 'latest'):
+                pass
+            else:
+                tags = tags + [tag]
+
+    return tags
+
+
+def get_tags_from_all_tags(all_tags: str=None):
+    """
+    Convert the incoming stringified JSON into a list of tags
+    :param all_tags:
+    :return:
+    """
+    all_tags_json =  '{"allTags" : ["' + all_tags.replace('\n', '","') + '"] }'
+    json_output = json.loads(all_tags_json)
+    if 'allTags' in json_output:
+        return(json_output['allTags'])
+    else:
+        return([])
+
+
+def get_tags_from_ecr(region: str=None, repo: str=None):
+    """
+    Get all the tags for the repo from ECR
+    :param region:
+    :param repo:
+    :return:
+    """
+    # Get the image_ids from the registry
+    image_ids = get_image_ids_from_ecr(region=region, repo=repo)
+
+    # Get the tags from the image_ids
+    tags = get_tags_from_image_ids(image_ids)
+
+    return tags
+
+
+def push_if_not_exist(region: str=None, registry_prefix: str=None, repo: str=None, tag: str=None):
     """
     Push the image to the registry if it doesn't exist
     :param region:
@@ -61,7 +110,7 @@ def push_if_not_exist(region, registry_prefix, repo, tag):
     :param tag:
     :return:
     """
-    image_ids = get_image_ids_from_ecr(region=region, repo=repo, tag=tag)
+    image_ids = get_image_ids_from_ecr(region=region, repo=repo)
     if not check_for_tag(image_ids=image_ids, tag=tag):
         # Make sure image exists, else NoOp
         image_exists = get_stdout('''{docker} images -q {repo}'''.format(docker=DOCKER,
@@ -81,7 +130,7 @@ def push_if_not_exist(region, registry_prefix, repo, tag):
     return(True)
 
 
-def pull_if_not_exist(region, registry_prefix, repo, tag):
+def pull_if_not_exist(region: str=None, registry_prefix: str=None, repo: str=None, tag: str=None):
     """
     Pull the image from the registry if it doesn't exist locally
     :param region:
@@ -119,8 +168,37 @@ def pull_if_not_exist(region, registry_prefix, repo, tag):
 
     return(True)
 
+def prune_repos(region: str=None, registry_prefix: str=None, repo: str=None, current_tag: str=None, all_tags: str=None):
+    """
+    Pull the image from the registry if it doesn't exist locally
+    :param region:
+    :param registry_prefix:
+    :param repo:
+    :param current_tag:
+    :param all_tags:
+    :return:
+    """
+    # Get the tags from the all_tags JSON
+    all_tags_list = get_tags_from_all_tags(all_tags)
 
-def get_args(argv: list=None):
+    # Add the current_tag to the recent (local) tags. Just to be safe
+    recent_tags = all_tags_list + [current_tag]
+
+    # Get the tags for the repo from ECR
+    ecr_tags = get_tags_from_ecr(region, repo)
+
+    # Get all the tags in the registry that are *not* the ones we want
+    bad_tags = [tag for tag in ecr_tags if tag not in recent_tags]
+
+    # Delete the obsolete images
+    for tag in bad_tags:
+        output = get_stdout('''{AWS} ecr batch-delete-image --region {region} --repository-name {repo} --image-ids imageTag={tag}'''
+                            .format(AWS=AWS, region=region, repo=repo, tag=tag))
+
+    return True
+
+
+def get_args(argv: list=[]):
     """
     Make sure that we got what we need, and use it
     :param argv:
@@ -132,12 +210,15 @@ def get_args(argv: list=None):
         registry_prefix = sys.argv[3]
         repo = sys.argv[4]
         tag = sys.argv[5]
-        return command, region, registry_prefix, repo, tag
+        all_tags = sys.argv[6]
+        return command, region, registry_prefix, repo, tag, all_tags
+    except IndexError:
+        all_tags = None
     except:
         sys.exit("Whyfor you not send in args?")
 
 
-command, region, registry_prefix, repo, tag = get_args(sys.argv)
+command, region, registry_prefix, repo, tag, all_tags = get_args(sys.argv)
 if command == "push":
     retval = push_if_not_exist(region=region, registry_prefix=registry_prefix, repo=repo, tag=tag)
     if not retval:
@@ -146,5 +227,13 @@ elif command == "pull":
     retval = pull_if_not_exist(region=region, registry_prefix=registry_prefix, repo=repo, tag=tag)
     if not retval:
         print('FAILED')
+elif command == "prune":
+    # If an empty list is passed in for all_tags, fail violently
+    if all_tags is None:
+        print('FAILED')
+    else:
+        retval = prune_repos(region=region, registry_prefix=registry_prefix, repo=repo, current_tag=tag, all_tags=all_tags)
+        if not retval:
+            print('FAILED')
 else:
     print('FAILED')

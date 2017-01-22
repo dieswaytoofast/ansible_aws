@@ -33,3 +33,8 @@
   when: ansible_aws_push_to_ecr
   vars:
     ansible_aws_state: running
+
+# Prune ECR
+- name: Prune repos on ECR
+  include: ansible_aws_prune_ecr.yml
+  when: ansible_aws_prune_ecr

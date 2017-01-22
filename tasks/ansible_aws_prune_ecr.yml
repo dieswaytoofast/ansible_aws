@@ -1,0 +1,14 @@
+---
+
+# ansible_aws_all_tags_json : json string in the form '{"all_tags" : ["a", "b", "c"]}'
+# Prune
+- name: "Perform a {{ ansible_aws_repo_op }} on {{ ansible_aws_image }}"
+  include: roles/ansible_aws/tasks/ansible_aws_repo_ops.yml  # Fully qualified, 'cos it might be invoked from elsewhere
+  vars:
+    ansible_aws_repo_op: prune
+    ansible_aws_image: "{{ ecr_item.image_name }}"
+    ansible_aws_tag: "{{ ecr_item.image_tag }}"
+    ansible_aws_all_tags_string: "{{ ecr_item.image_all_tags_string}}"
+  with_items: "{{ ansible_aws_items| default([]) }}"
+  loop_control:
+    loop_var: ecr_item
