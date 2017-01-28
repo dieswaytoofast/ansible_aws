@@ -4,7 +4,7 @@
 - name: Get the docker login command
   environment:
     AWS_REGION: "{{ ansible_aws_region }}"
-  command: "{{ ansible_aws_paths.aws }} ecr get-login --region {{ ansible_aws_region }}"
+  command: "{{ ansible_aws_paths_aws }} ecr get-login --region {{ ansible_aws_region }}"
   register: result
 
 

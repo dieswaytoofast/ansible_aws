@@ -6,8 +6,7 @@
 ansible_aws_region: us-east-1
 
 # Default paths
-ansible_aws_paths:
-  aws: /usr/local/bin/aws
+ansible_aws_paths_aws: /usr/local/bin/aws
 
 # Default perms
 ansible_aws_assing_public_ip: false

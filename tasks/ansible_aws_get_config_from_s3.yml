@@ -7,7 +7,7 @@
 
 
 - name: Copy config file {{ ansible_aws_config_file }} from {{ ansible_aws_s3_url }}
-  command: "{{ ansible_aws_paths.aws }} s3 cp {{ ansible_aws_s3_url }} {{ ansible_aws_config_file }}"
+  command: "{{ ansible_aws_paths_aws }} s3 cp {{ ansible_aws_s3_url }} {{ ansible_aws_config_file }}"
   register: result
 
 - name: Check if the file exists
