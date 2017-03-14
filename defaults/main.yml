@@ -24,4 +24,4 @@ ansible_aws_instance_state_configured: configured
 ansible_aws_weave_state_launched: launched
 ansible_aws_weave_state_configured: configured
 
-ansible_aws_all_tags_string: ''
+ansible_aws_all_tags_string: "None"

@@ -211,6 +211,8 @@ def get_args(argv: list=[]):
         repo = sys.argv[4]
         tag = sys.argv[5]
         all_tags = sys.argv[6]
+        if all_tags is "None":
+            all_tags = ''
         return command, region, registry_prefix, repo, tag, all_tags
     except IndexError:
         all_tags = None
